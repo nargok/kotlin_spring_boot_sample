@@ -4,7 +4,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("greeter")
-class GreeterController {
+class GreeterController(
+    private val greeter: Greeter // Dependency Injection
+) {
     @GetMapping("/hello")
     fun hello(@RequestParam("name") name: String): HelloResponse {
         return HelloResponse("Hello ${name}")
@@ -12,7 +14,8 @@ class GreeterController {
 
     @GetMapping("/hello/{name}")
     fun helloPathValue(@PathVariable("name") name: String): HelloResponse {
-        return HelloResponse("Hello ${name}")
+        val message = greeter.sayHello(name)
+        return HelloResponse(message)
     }
 
     @PostMapping("/hello")
