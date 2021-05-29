@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("greeter")
 class GreeterController {
-    @Autowired // DIの対象フィールドである
-    private lateinit var greeter: Greeter
+    var greeter: Greeter? = null
+        @Autowired
+        set(value) {
+            field = value
+        }
 
     @GetMapping("/hello")
     fun hello(@RequestParam("name") name: String): HelloResponse {
@@ -16,7 +19,7 @@ class GreeterController {
 
     @GetMapping("/hello/{name}")
     fun helloPathValue(@PathVariable("name") name: String): HelloResponse {
-        val message = greeter.sayHello(name)
+        val message = greeter?.sayHello(name) ?: return HelloResponse("")
         return HelloResponse(message)
     }
 
